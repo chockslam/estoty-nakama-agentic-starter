@@ -40,6 +40,7 @@ When asked to work on the project, first identify the current phase, then work o
 ## Research requirement
 
 Before making version-sensitive technical choices, research current official documentation.
+If a decision depends on versions, runtime behavior, or platform quirks, confirm it with the official docs first and record the source in `docs/06-research-log.md` before editing implementation code.
 
 Required official sources:
 

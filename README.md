@@ -17,6 +17,17 @@ Final project must implement:
    - rarity options: list of strings.
 3. `private_health_check` - private server-to-server RPC callable only with the server/runtime key, returning success status only.
 
+## Phase 0 baseline
+
+Official-doc research pinned the runtime baseline to:
+
+- Nakama `3.37.0`
+- `github.com/heroiclabs/nakama-common/runtime` `v1.44.2`
+- `heroiclabs/nakama-pluginbuilder` `3.37.0`
+- Local Go tooling `go1.26.2`
+
+The Docker build path is the source of truth for the runtime plugin build; the host Go toolchain is used for tests and editor tooling, not for the Nakama plugin ABI.
+
 ## How to use this starter
 
 1. Unzip this folder.

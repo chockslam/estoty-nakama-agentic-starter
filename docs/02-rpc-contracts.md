@@ -36,14 +36,10 @@ Example:
 
 - Payload must be valid JSON.
 - Payload must be an object.
+- Payload is merged shallowly into the caller's existing metadata.
+- Incoming values overwrite existing keys with the same name.
 - Payload must not be allowed to select a target user ID.
 - Payload may contain arbitrary caller-supplied keys and values.
-- Implementation must define whether metadata is merged with existing metadata or replaces it.
-
-Preferred strategy:
-
-- Shallow merge incoming object into existing metadata.
-- Incoming values overwrite existing keys with the same name.
 - Do not treat nested objects specially unless documented.
 
 ### Success response
@@ -90,15 +86,9 @@ Return free-form game configuration JSON.
 
 ### Auth requirement
 
-Open question for Phase 0/implementation:
+No user session is required.
 
-- It may be callable by authenticated users because game clients need it.
-- It may also be callable without auth if Nakama permits and the implementation intentionally allows public config.
-
-Preferred default:
-
-- Allow authenticated users.
-- If unauthenticated access is allowed, document why.
+This RPC is public because it returns non-sensitive game configuration.
 
 ### Response body
 
@@ -186,11 +176,9 @@ If using a non-empty response, document why.
 To be finalized after implementation:
 
 ```bash
-# Expected to fail with normal user token.
-./scripts/rpc-private-health-user-session.sh
-
-# Expected to succeed with runtime HTTP key / server-to-server path.
+# Positive path: call via runtime HTTP key / server-to-server path.
 ./scripts/rpc-private-health.sh
+# Negative path: call the same endpoint with a user bearer token.
 ```
 
 ## Naming stability

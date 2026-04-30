@@ -133,7 +133,7 @@ Expected test cases:
 Required flow:
 
 1. Start Docker stack.
-2. Call `get_game_config`.
+2. Call `get_game_config` without authenticating first.
 3. Verify returned JSON contains:
    - `welcomeMessage` string;
    - `xpRate` number;
@@ -178,7 +178,7 @@ Placeholder commands:
 
 ```bash
 ./scripts/rpc-private-health.sh
-./scripts/rpc-private-health-user-session.sh
+# documented user-session curl example
 ```
 
 ## Final reviewer verification checklist

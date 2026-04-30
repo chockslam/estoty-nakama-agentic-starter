@@ -25,7 +25,14 @@ The project should use:
 - Go standard `testing` package for unit tests;
 - shell scripts or documented curl examples for integration verification.
 
-Actual versions must be selected during Phase 0 research and recorded in `docs/06-research-log.md`.
+Phase 0 baseline selected from official docs:
+
+- Nakama: `3.37.0`
+- `github.com/heroiclabs/nakama-common/runtime`: `v1.44.2`
+- `heroiclabs/nakama-pluginbuilder`: `3.37.0`
+- Local Go tooling: `go1.26.2`
+
+The Docker build path remains the source of truth for the runtime plugin build, because Nakama Go plugins must match the server binary's Go/dependency ABI.
 
 Do not assume the newest local Go version is compatible with the selected Nakama plugin build. Nakama, plugin-builder, Go, and `nakama-common` compatibility must be confirmed from official documentation.
 
@@ -128,15 +135,16 @@ parseMetadataPayload(payload string) (map[string]any, error)
 mergeMetadata(existing map[string]any, incoming map[string]any) map[string]any
 ```
 
-Merge behavior must be explicitly defined in `docs/02-rpc-contracts.md` before implementation.
+Merge behavior is defined in `docs/02-rpc-contracts.md` as a shallow merge.
 
 ### `get_game_config`
 
 Core logic:
 
 1. Load or embed config.
-2. Validate required fields.
-3. Return JSON.
+2. Treat the RPC as public; no user session is required.
+3. Validate required fields.
+4. Return JSON.
 
 Recommended pure functions:
 
@@ -205,12 +213,8 @@ Do not attempt to fully mock Nakama internals unless it is simple and clearly us
 - Avoid extra services.
 - Avoid feature creep.
 
-## Key open decisions for Phase 0
+## Remaining open decisions
 
-- Nakama image version.
-- Plugin-builder image version.
-- `nakama-common` version.
-- Go version/toolchain used inside plugin build.
 - Config source: JSON file vs embedded typed config.
-- Metadata merge strategy: shallow merge vs replace.
-- Exact curl endpoints and auth flow.
+- Exact curl endpoints for the verification scripts.
+- Exact Go version printed by the selected Nakama image at startup, to be recorded after Phase 2 verification.

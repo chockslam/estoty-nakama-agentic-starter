@@ -268,7 +268,7 @@ Prefer a small config loader/validator function that can be tested without Docke
 
 Add a script or documented curl flow proving:
 
-- RPC returns valid JSON;
+- RPC returns valid JSON without requiring a user session;
 - required fields are present;
 - field types are correct.
 
