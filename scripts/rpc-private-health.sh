@@ -3,7 +3,7 @@
 set -euo pipefail
 
 NAKAMA_URL="${NAKAMA_URL:-http://127.0.0.1:7350}"
-NAKAMA_HTTP_KEY="${NAKAMA_HTTP_KEY:-defaulthttpkey}"
+NAKAMA_HTTP_KEY="${NAKAMA_HTTP_KEY:-${NAKAMA_RUNTIME_HTTP_KEY:-defaulthttpkey}}"
 MODE="${MODE:-private}"
 response_file="${TMPDIR:-/tmp}/nakama-private-health.$$"
 

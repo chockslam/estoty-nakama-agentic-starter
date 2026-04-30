@@ -59,7 +59,7 @@ Expected checks:
 - Go runtime module is loaded by Nakama.
 - Logs contain a clear module startup message.
 
-Suggested log check placeholder:
+Suggested log check:
 
 ```bash
 docker compose logs nakama | grep -i "runtime"

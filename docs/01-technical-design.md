@@ -212,7 +212,3 @@ Do not attempt to fully mock Nakama internals unless it is simple and clearly us
 - Avoid adding an application database schema.
 - Avoid extra services.
 - Avoid feature creep.
-
-## Remaining open decisions
-
-- Exact curl endpoints for the verification scripts.

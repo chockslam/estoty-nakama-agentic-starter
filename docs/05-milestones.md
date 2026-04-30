@@ -88,7 +88,7 @@ Validate that all required documentation exists before implementation begins.
 - Scope and out-of-scope items are clear.
 - RPC contracts are named and documented.
 - Verification plan includes success and failure cases.
-- README explains intended local workflow, even if commands are placeholders.
+- README explains intended local workflow, even if commands are temporary or incomplete during drafting.
 - Agent workflow instructs future agents to work phase-by-phase.
 - No unnecessary architecture has been introduced.
 

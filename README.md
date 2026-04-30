@@ -21,7 +21,7 @@ Local-only values in the default Docker setup:
 
 - PostgreSQL password: `localdb`
 - Nakama server key: `defaultkey`
-- Nakama runtime HTTP key: `defaulthttpkey`
+- Nakama runtime HTTP key: `NAKAMA_RUNTIME_HTTP_KEY` (`NAKAMA_HTTP_KEY` is also accepted by the review scripts): `defaulthttpkey`
 - Nakama session encryption key: `defaultencryptionkey`
 - Nakama refresh encryption key: `defaultrefreshencryptionkey`
 
