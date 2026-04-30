@@ -286,17 +286,19 @@ Relevant finding:
 - The latest stable Go release found in the official release history is Go 1.26.2, released 2026-04-07.
 - `go test` and the standard `testing` package are the official baseline for package tests.
 - Table-driven tests are the preferred Go style when one test body needs to exercise multiple JSON, validation, or authorization cases.
+- The `heroiclabs/nakama-pluginbuilder:3.37.0` image reports Go 1.25.5 during the Phase 2 Docker build, so that is the compatibility target for this repository.
 
 Decision:
 
-- Use Go 1.26.2 for local tooling and `go test ./...`.
+- Use Go 1.25.5 for the module `go` directive and plugin-builder compatibility.
+- Use Go 1.25.5 for local tooling if a matching Go install is available.
 - Use the standard library `testing` package for unit tests.
 - Prefer table-driven tests for payload parsing, merge behavior, config validation, and authorization decisions.
 
 Risk / uncertainty:
 
-- The exact Go version used by the selected Nakama 3.37.0 binary is not documented in the release notes, so the Docker build path remains the source of truth for runtime-plugin compatibility.
+- Go 1.26.2 is newer than the plugin-builder runtime target, but it is not selected here because the Nakama 3.37.0 plugin-builder image currently builds against Go 1.25.5.
 
 Follow-up:
 
-- Confirm the Go version reported by Nakama startup logs once the Docker stack exists, and record that in a later phase if needed.
+- Keep `go.mod` and future local tooling aligned with Go 1.25.5 unless a later Nakama/plugin-builder upgrade changes the compatibility target.

@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:12.2-alpine
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all
+    environment:
+      POSTGRES_DB: nakama
+      POSTGRES_USER: nakama
+      POSTGRES_PASSWORD: localdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nakama -d nakama"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  nakama:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - /nakama/nakama migrate up --config /nakama/data/local.yml && exec /nakama/nakama --config /nakama/data/local.yml
+    ports:
+      - "7348:7348"
+      - "7349:7349"
+      - "7350:7350"
+      - "7351:7351"
+
+volumes:
+  pgdata:

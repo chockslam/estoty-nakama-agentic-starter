@@ -19,14 +19,42 @@ Final project must implement:
 
 ## Phase 0 baseline
 
-Official-doc research pinned the runtime baseline to:
+Official-doc research and Phase 2 build validation pinned the runtime baseline to:
 
 - Nakama `3.37.0`
 - `github.com/heroiclabs/nakama-common/runtime` `v1.44.2`
 - `heroiclabs/nakama-pluginbuilder` `3.37.0`
-- Local Go tooling `go1.26.2`
+- Local Go tooling `go1.25.5`
 
 The Docker build path is the source of truth for the runtime plugin build; the host Go toolchain is used for tests and editor tooling, not for the Nakama plugin ABI.
+The pinned `heroiclabs/nakama-pluginbuilder:3.37.0` image currently reports Go `1.25.5`, so this repository targets that version for plugin compatibility.
+
+## Phase 2 runtime skeleton
+
+The repository now contains the minimal Nakama runtime skeleton for Phase 2.
+
+Local-only values used by the default Docker Compose stack:
+
+- PostgreSQL password: `localdb`
+- Nakama server key: `defaultkey`
+- Nakama runtime HTTP key: `defaulthttpkey`
+- Nakama session encryption key: `defaultencryptionkey`
+- Nakama refresh encryption key: `defaultrefreshencryptionkey`
+
+## Start the stack
+
+```bash
+docker compose up --build
+```
+
+The stack exposes the standard Nakama ports:
+
+- HTTP API: `http://localhost:7350`
+- Console HTTP: `http://localhost:7351`
+- gRPC API: `localhost:7349`
+- Console gRPC: `localhost:7348`
+
+The runtime module currently only logs startup. RPCs are added in later phases.
 
 ## How to use this starter
 

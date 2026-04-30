@@ -25,14 +25,14 @@ The project should use:
 - Go standard `testing` package for unit tests;
 - shell scripts or documented curl examples for integration verification.
 
-Phase 0 baseline selected from official docs:
+Phase 0 baseline selected from official docs and Phase 2 build validation:
 
 - Nakama: `3.37.0`
 - `github.com/heroiclabs/nakama-common/runtime`: `v1.44.2`
 - `heroiclabs/nakama-pluginbuilder`: `3.37.0`
-- Local Go tooling: `go1.26.2`
+- Local Go tooling: `go1.25.5`
 
-The Docker build path remains the source of truth for the runtime plugin build, because Nakama Go plugins must match the server binary's Go/dependency ABI.
+The Docker build path remains the source of truth for the runtime plugin build, because Nakama Go plugins must match the server binary's Go/dependency ABI. The selected plugin-builder image currently uses Go `1.25.5`, so `go.mod` should target that version.
 
 Do not assume the newest local Go version is compatible with the selected Nakama plugin build. Nakama, plugin-builder, Go, and `nakama-common` compatibility must be confirmed from official documentation.
 
