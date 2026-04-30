@@ -1,11 +1,19 @@
-# Prompt 01 - Phase 0 Research and Version Baseline
+# Prompt 01 - Phase 0 Research and Version Baseline (Historical)
+
+Use this only if Nakama, Go, Docker, or dependency versions need to be revalidated.
 
 ```text
-Read AGENTS.md and docs/05-milestones.md.
+Read AGENTS.md, docs/05-milestones.md, and docs/06-research-log.md.
 
 Current target phase: Phase 0 - Research and version baseline.
 
 Work only on Phase 0.
+
+Prompt/doc synchronization rule:
+- Before editing, check whether prior phase decisions changed assumptions in current or downstream docs/prompts.
+- Update only affected docs/prompts.
+- Do not rewrite unrelated prompt files.
+- Keep this prompt aligned with AGENTS.md, docs/05-milestones.md, docs/06-research-log.md, and README.md.
 
 Goal:
 Research current official documentation and establish the technical baseline for the Nakama + PostgreSQL + Docker + Go runtime project.

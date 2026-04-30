@@ -1,11 +1,17 @@
 # Prompt 06 - Phase 6 Final Verification and Reviewer Polish
 
 ```text
-Read AGENTS.md, docs/03-verification-plan.md, docs/05-milestones.md, README.md, and the implementation files.
+Read AGENTS.md, docs/03-verification-plan.md, docs/05-milestones.md, docs/06-research-log.md, README.md, and the implementation files.
 
 Current target phase: Phase 6 - Full verification and reviewer polish.
 
 Work only on Phase 6.
+
+Prompt/doc synchronization rule:
+- Before editing, check whether prior phase decisions changed assumptions in this prompt or downstream docs/prompts.
+- Update only affected docs/prompts.
+- Do not rewrite unrelated prompt files.
+- Keep this prompt aligned with AGENTS.md, docs/05-milestones.md, docs/06-research-log.md, and README.md.
 
 Goal:
 Prepare the repository for Estoty review.

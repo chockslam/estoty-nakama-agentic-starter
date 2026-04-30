@@ -1,11 +1,19 @@
 # Prompt 02 - Phase 2 Docker/Nakama/PostgreSQL Runtime Skeleton
 
+This is the source-of-truth prompt for Phase 2. Use it directly for the next task.
+
 ```text
-Read AGENTS.md, docs/05-milestones.md, docs/06-research-log.md, and docs/03-verification-plan.md.
+Read AGENTS.md, README.md, docs/05-milestones.md, docs/06-research-log.md, and docs/03-verification-plan.md.
 
 Current target phase: Phase 2 - Docker/Nakama/PostgreSQL runtime skeleton.
 
 Work only on Phase 2.
+
+Prompt/doc synchronization rule:
+- Before editing, check whether Phase 0 decisions or README/docs changed assumptions in this prompt or downstream prompts/docs.
+- Update only affected docs/prompts.
+- Do not rewrite unrelated prompt files.
+- Keep this prompt aligned with AGENTS.md, docs/05-milestones.md, docs/06-research-log.md, and README.md.
 
 Goal:
 Make the project boot with Docker Compose and load a minimal Nakama Go runtime module.
@@ -29,11 +37,11 @@ Do not implement RPC business logic yet.
 Verification:
 Run or prepare to run:
 - docker compose up --build
-- docker compose logs check proving Nakama started and the Go runtime loaded
+- docker compose logs for the Nakama service showing startup and runtime load
 
 Constraints:
 - Keep implementation minimal.
-- Use compatible versions from Phase 0.
+- Use the pinned baseline from docs/06-research-log.md.
 - Do not add custom web server.
 - Do not add gameplay features.
 - Do not commit production secrets.

@@ -7,6 +7,12 @@ Current target phase: Phase 5 - Private server-to-server RPC.
 
 Work only on Phase 5.
 
+Prompt/doc synchronization rule:
+- Before editing, check whether Phase 0 or earlier phase decisions changed assumptions in this prompt or downstream docs/prompts.
+- Update only affected docs/prompts.
+- Do not rewrite unrelated prompt files.
+- Keep this prompt aligned with AGENTS.md, docs/05-milestones.md, docs/06-research-log.md, and README.md.
+
 Goal:
 Implement private_health_check RPC that succeeds only through server-to-server/runtime-key invocation and fails for normal user-session calls.
 

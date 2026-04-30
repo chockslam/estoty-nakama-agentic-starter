@@ -1,18 +1,24 @@
 # Prompt 04 - Phase 4 Game Configuration RPC
 
 ```text
-Read AGENTS.md, docs/02-rpc-contracts.md, docs/03-verification-plan.md, and docs/05-milestones.md.
+Read AGENTS.md, docs/02-rpc-contracts.md, docs/03-verification-plan.md, docs/05-milestones.md, and docs/06-research-log.md.
 
 Current target phase: Phase 4 - Game configuration RPC.
 
 Work only on Phase 4.
+
+Prompt/doc synchronization rule:
+- Before editing, check whether Phase 0 or earlier phase decisions changed assumptions in this prompt or downstream docs/prompts.
+- Update only affected docs/prompts.
+- Do not rewrite unrelated prompt files.
+- Keep this prompt aligned with AGENTS.md, docs/05-milestones.md, docs/06-research-log.md, and README.md.
 
 Goal:
 Implement get_game_config RPC.
 
 Before editing:
 - restate the RPC contract;
-- decide whether config is file-based or embedded, using docs/01-technical-design.md;
+- decide whether config is file-based or embedded, using docs/01-technical-design.md and baseline assumptions from docs/06-research-log.md;
 - list pure config validation functions;
 - list table-driven tests;
 - list integration verification steps.
