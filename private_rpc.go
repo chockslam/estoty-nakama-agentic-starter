@@ -11,8 +11,6 @@ import (
 
 const privateHealthCheckRPCID = "private_health_check"
 
-const grpcCodePermissionDenied = 7
-
 var errPrivateRPCRequiresServerToServer = errors.New("private_health_check is only callable via server-to-server/runtime HTTP key")
 
 func privateHealthCheckRPC(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.NakamaModule, payload string) (string, error) {

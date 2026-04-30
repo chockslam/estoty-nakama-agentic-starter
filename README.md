@@ -161,3 +161,7 @@ private_health_check is only callable via server-to-server/runtime HTTP key
 ## Notes
 
 The Docker build path is the source of truth for the Nakama Go plugin ABI. The host Go toolchain is only for local tooling and tests.
+
+## Bonus
+
+Beyond the assignment requirements, this repository includes a small GitHub Actions workflow that runs `go test ./...` with the Go version from `go.mod` and verifies `docker compose build`.

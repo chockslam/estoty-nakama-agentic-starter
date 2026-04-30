@@ -46,6 +46,11 @@ func TestDecodeMetadataObject(t *testing.T) {
 			raw:     `42`,
 			wantErr: errMetadataObjectRequired,
 		},
+		{
+			name: "accepts similar non-reserved key",
+			raw:  `{"userIdPreference":"visible"}`,
+			want: map[string]any{"userIdPreference": "visible"},
+		},
 	}
 
 	for _, tt := range tests {
@@ -145,11 +150,17 @@ func TestPrepareMetadataUpdate(t *testing.T) {
 			wantErr: errMetadataObjectRequired,
 		},
 		{
-			name:         "payload cannot override target user id",
+			name:    "rejects reserved keys in payload",
+			ctx:     ctxWithUserID,
+			payload: `{"userId":"user-999","favoriteHero":"warrior"}`,
+			wantErr: errMetadataReservedKey,
+		},
+		{
+			name:         "accepts similar non-reserved key",
 			ctx:          ctxWithUserID,
-			payload:      `{"userId":"user-999","favoriteHero":"warrior"}`,
+			payload:      `{"userIdPreference":"visible","favoriteHero":"warrior"}`,
 			wantUserID:   "user-123",
-			wantMetadata: map[string]any{"userId": "user-999", "favoriteHero": "warrior"},
+			wantMetadata: map[string]any{"userIdPreference": "visible", "favoriteHero": "warrior"},
 		},
 	}
 

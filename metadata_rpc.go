@@ -12,16 +12,11 @@ import (
 
 const updateUserMetadataRPCID = "update_user_metadata"
 
-const (
-	grpcCodeInvalidArgument = 3
-	grpcCodeInternal        = 13
-	grpcCodeUnauthenticated = 16
-)
-
 var (
 	errAuthenticatedUserRequired = errors.New("authenticated user session required")
 	errMetadataInvalidJSON       = errors.New("metadata payload must be valid JSON")
 	errMetadataObjectRequired    = errors.New("metadata payload must be a JSON object")
+	errMetadataReservedKey       = errors.New("metadata payload contains a reserved key")
 	errMetadataLoadFailed        = errors.New("unable to load account metadata")
 	errMetadataUpdateFailed      = errors.New("unable to update account metadata")
 	errMetadataResponseFailed    = errors.New("unable to marshal metadata response")
@@ -53,6 +48,7 @@ func updateUserMetadataRPC(ctx context.Context, logger runtime.Logger, db *sql.D
 	}
 
 	updatedMetadata := mergeMetadata(existingMetadata, incomingMetadata)
+	// Empty profile fields are no-ops in AccountUpdateId, so this only updates metadata.
 	if err := nk.AccountUpdateId(ctx, userID, "", updatedMetadata, "", "", "", "", ""); err != nil {
 		return "", runtime.NewError(errMetadataUpdateFailed.Error(), grpcCodeInternal)
 	}
@@ -76,6 +72,9 @@ func prepareMetadataUpdate(ctx context.Context, payload string) (string, map[str
 
 	incomingMetadata, err := decodeMetadataObject(payload)
 	if err != nil {
+		return "", nil, err
+	}
+	if err := validateIncomingMetadata(incomingMetadata); err != nil {
 		return "", nil, err
 	}
 
@@ -109,6 +108,17 @@ func decodeMetadataObject(raw string) (map[string]any, error) {
 	return object, nil
 }
 
+func validateIncomingMetadata(metadata map[string]any) error {
+	for key := range metadata {
+		switch key {
+		case "userId", "username", "id", "user_id":
+			return errMetadataReservedKey
+		}
+	}
+
+	return nil
+}
+
 func decodeExistingMetadata(raw string) (map[string]any, error) {
 	if strings.TrimSpace(raw) == "" {
 		return map[string]any{}, nil
@@ -117,6 +127,9 @@ func decodeExistingMetadata(raw string) (map[string]any, error) {
 	return decodeMetadataObject(raw)
 }
 
+// mergeMetadata returns a shallow merged copy where incoming top-level keys
+// overwrite existing keys. Nested objects are not deep-merged or deep-copied,
+// so callers must not mutate returned nested values if existing must remain unchanged.
 func mergeMetadata(existing map[string]any, incoming map[string]any) map[string]any {
 	merged := make(map[string]any, len(existing)+len(incoming))
 
@@ -135,7 +148,7 @@ func metadataRPCError(err error) error {
 	switch {
 	case errors.Is(err, errAuthenticatedUserRequired):
 		return runtime.NewError(err.Error(), grpcCodeUnauthenticated)
-	case errors.Is(err, errMetadataInvalidJSON), errors.Is(err, errMetadataObjectRequired):
+	case errors.Is(err, errMetadataInvalidJSON), errors.Is(err, errMetadataObjectRequired), errors.Is(err, errMetadataReservedKey):
 		return runtime.NewError(err.Error(), grpcCodeInvalidArgument)
 	default:
 		return runtime.NewError(err.Error(), grpcCodeInternal)

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,11 +13,12 @@ import (
 	"github.com/heroiclabs/nakama-common/runtime"
 )
 
-const (
-	getGameConfigRPCID = "get_game_config"
+const getGameConfigRPCID = "get_game_config"
 
-	defaultGameConfigPath = "/nakama/data/config/game_config.json"
-)
+//go:embed config/game_config.json
+var gameConfigJSON []byte
+
+var cachedGameConfigResponse string
 
 var (
 	errGameConfigLoadFailed   = errors.New("unable to load game config")
@@ -32,17 +34,22 @@ type GameConfig struct {
 }
 
 func getGameConfigRPC(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.NakamaModule, payload string) (string, error) {
-	cfg, err := loadGameConfig(defaultGameConfigPath)
+	return cachedGameConfigResponse, nil
+}
+
+func loadAndCacheGameConfig() error {
+	cfg, err := loadGameConfigFromBytes(gameConfigJSON)
 	if err != nil {
-		return "", runtime.NewError(err.Error(), grpcCodeInternal)
+		return err
 	}
 
 	response, err := json.Marshal(cfg)
 	if err != nil {
-		return "", runtime.NewError(errGameConfigMarshalFail.Error(), grpcCodeInternal)
+		return fmt.Errorf("%w: %v", errGameConfigMarshalFail, err)
 	}
 
-	return string(response), nil
+	cachedGameConfigResponse = string(response)
+	return nil
 }
 
 func loadGameConfig(path string) (GameConfig, error) {
@@ -51,6 +58,10 @@ func loadGameConfig(path string) (GameConfig, error) {
 		return GameConfig{}, fmt.Errorf("%w: %v", errGameConfigLoadFailed, err)
 	}
 
+	return loadGameConfigFromBytes(raw)
+}
+
+func loadGameConfigFromBytes(raw []byte) (GameConfig, error) {
 	var cfg GameConfig
 	if err := json.Unmarshal(raw, &cfg); err != nil {
 		return GameConfig{}, fmt.Errorf("%w: %v", errGameConfigInvalidJSON, err)
