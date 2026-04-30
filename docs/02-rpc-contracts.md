@@ -38,9 +38,9 @@ Example:
 - Payload must be an object.
 - Payload is merged shallowly into the caller's existing metadata.
 - Incoming values overwrite existing keys with the same name.
-- Payload must not be allowed to select a target user ID.
+- Nested object deep-merge is intentionally out of scope.
+- Payload must not be allowed to select a target user ID or account.
 - Payload may contain arbitrary caller-supplied keys and values.
-- Do not treat nested objects specially unless documented.
 
 ### Success response
 
@@ -84,6 +84,8 @@ Return free-form game configuration JSON loaded from `config/game_config.json`.
 No user session is required.
 
 This RPC is public because it returns non-sensitive game configuration.
+
+It is intentionally not the private/server-to-server assignment RPC; that boundary is covered by `private_health_check`.
 
 The HTTP helper for local verification uses Nakama's runtime HTTP key, since `RegisterRpc` requests still require either a session token or an HTTP key at the transport layer.
 

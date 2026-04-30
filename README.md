@@ -8,6 +8,14 @@ Implemented RPCs:
 - `get_game_config` - public game config JSON loaded from [`config/game_config.json`](config/game_config.json).
 - `private_health_check` - server-to-server RPC protected by Nakama's runtime HTTP key.
 
+## Design Decisions
+
+- The runtime module is written in Go because the assignment is for a Go Developer role.
+- Nakama, `nakama-common`, and plugin-builder versions are pinned together to avoid Go plugin compatibility issues.
+- RPC handlers keep Nakama-specific code thin and delegate validation, merge, and authorization decisions to small testable functions.
+- `private_health_check` rejects user-session calls and succeeds only through the server-to-server/runtime HTTP key path.
+- The project avoids unrelated gameplay systems so the assignment stays focused and reviewable.
+
 ## Baseline
 
 Pinned versions from official docs and Docker validation:
@@ -67,6 +75,8 @@ Expected success:
 {"success":true,"metadata":{...}}
 ```
 
+Merge semantics: metadata updates use a deterministic shallow merge. Incoming top-level keys overwrite existing top-level keys, nested object deep-merge is out of scope, and the caller cannot choose the target user/account.
+
 Negative metadata examples:
 
 ```bash
@@ -99,6 +109,8 @@ metadata payload must be valid JSON
 
 Game config RPC:
 
+`get_game_config` is intentionally not private and may be called as a normal RPC. The helper script uses the local runtime HTTP key only for simple reviewer verification; the private RPC is `private_health_check`.
+
 ```bash
 ./scripts/rpc-get-game-config.sh
 ```
@@ -111,8 +123,15 @@ Expected success:
 
 Private RPC:
 
+Server-to-server success:
+
 ```bash
 ./scripts/rpc-private-health.sh
+```
+
+User-session failure:
+
+```bash
 MODE=user SESSION_TOKEN="$(./scripts/auth-device.sh)" ./scripts/rpc-private-health.sh
 ```
 
