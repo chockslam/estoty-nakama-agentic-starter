@@ -1,39 +1,23 @@
-# Estoty Nakama Go Assignment - Agentic Starter
+# Estoty Nakama Go Assignment
 
-This repository starter contains the documentation, prompts, milestones, and workflow controls for building the Estoty Go/Golang Developer take-home assignment using agentic coding systems such as Codex.
+Runnable Nakama backend for the Estoty Go/Golang take-home assignment.
 
-It is **not yet the finished Nakama implementation**. It is the project-control layer that should be committed before implementation begins.
+Implemented RPCs:
 
-## Assignment target
+- `update_user_metadata` - authenticated metadata merge for the caller's own account.
+- `get_game_config` - public game config JSON loaded from [`config/game_config.json`](config/game_config.json).
+- `private_health_check` - server-to-server RPC protected by Nakama's runtime HTTP key.
 
-Build a Docker + PostgreSQL-based Nakama project using Go runtime code.
+## Baseline
 
-Final project must implement:
-
-1. `update_user_metadata` - authenticated RPC that updates the caller's account metadata by adding arbitrary JSON information from the caller.
-2. `get_game_config` - RPC that returns a free-form JSON game configuration containing:
-   - welcome message: string;
-   - xp rate: float;
-   - rarity options: list of strings.
-3. `private_health_check` - private server-to-server RPC callable only with the server/runtime key, returning success status only.
-
-## Phase 0 baseline
-
-Official-doc research and Phase 2 build validation pinned the runtime baseline to:
+Pinned versions from official docs and Docker validation:
 
 - Nakama `3.37.0`
 - `github.com/heroiclabs/nakama-common/runtime` `v1.44.2`
 - `heroiclabs/nakama-pluginbuilder` `3.37.0`
-- Local Go tooling `go1.25.5`
+- Go toolchain target `1.25.5`
 
-The Docker build path is the source of truth for the runtime plugin build; the host Go toolchain is used for tests and editor tooling, not for the Nakama plugin ABI.
-The pinned `heroiclabs/nakama-pluginbuilder:3.37.0` image currently reports Go `1.25.5`, so this repository targets that version for plugin compatibility.
-
-## Phase 2 runtime skeleton
-
-The repository now contains the minimal Nakama runtime skeleton for Phase 2.
-
-Local-only values used by the default Docker Compose stack:
+Local-only values in the default Docker setup:
 
 - PostgreSQL password: `localdb`
 - Nakama server key: `defaultkey`
@@ -41,145 +25,120 @@ Local-only values used by the default Docker Compose stack:
 - Nakama session encryption key: `defaultencryptionkey`
 - Nakama refresh encryption key: `defaultrefreshencryptionkey`
 
-## Phase 3 metadata RPC
+Do not reuse those values outside local review.
 
-The runtime module now registers `update_user_metadata`.
-
-Local verification flow:
-
-```bash
-SESSION_TOKEN="$(./scripts/auth-device.sh)"
-SESSION_TOKEN="$SESSION_TOKEN" ./scripts/rpc-update-metadata.sh
-```
-
-`auth-device.sh` uses the local default server key and prints the session token to stdout.
-`rpc-update-metadata.sh` expects `SESSION_TOKEN` and sends raw JSON through the RPC `unwrap=true` path.
-
-## Phase 4 game config RPC
-
-The runtime now also exposes `get_game_config`.
-
-The game configuration is stored in [`config/game_config.json`](config/game_config.json) and copied into the Nakama image at runtime startup.
-
-Local verification flow:
-
-```bash
-./scripts/rpc-get-game-config.sh
-```
-
-The helper uses the local runtime HTTP key, not a player session token.
-
-Expected response shape:
-
-```json
-{
-  "welcomeMessage": "Welcome to the game!",
-  "xpRate": 1.5,
-  "rarityOptions": ["common", "rare", "epic", "legendary"]
-}
-```
-
-## Phase 5 private RPC
-
-The runtime now also exposes `private_health_check`.
-
-Local verification flow:
-
-```bash
-./scripts/rpc-private-health.sh
-MODE=user SESSION_TOKEN="$(./scripts/auth-device.sh)" ./scripts/rpc-private-health.sh
-```
-
-The first command uses the local runtime HTTP key and should return `{"success":true}`.
-The second command uses a user session and should fail with an authorization error.
-
-## Start the stack
+## Quick Start
 
 ```bash
 docker compose up --build
 ```
 
-The stack exposes the standard Nakama ports:
+Ports:
 
 - HTTP API: `http://localhost:7350`
 - Console HTTP: `http://localhost:7351`
 - gRPC API: `localhost:7349`
 - Console gRPC: `localhost:7348`
 
-The runtime module currently logs startup and exposes all three assignment RPCs.
+## Verification
 
-## How to use this starter
-
-1. Unzip this folder.
-2. Initialize a Git repository.
-3. Commit the starter docs.
-4. Give your agent the prompt in:
-
-```text
-prompts/00-agentic-kickoff.md
-```
-
-5. Let the agent complete Phase 0 and Phase 1 first.
-6. Only then start implementation phases.
-
-Recommended first commands:
-
-```bash
-git init
-git add .
-git commit -m "Add agentic project-control docs"
-```
-
-## Documentation map
-
-```text
-AGENTS.md                         Agent operating instructions read by Codex-style tools.
-docs/00-assignment-brief.md        Engineering restatement of the assignment.
-docs/01-technical-design.md        Proposed architecture and implementation approach.
-docs/02-rpc-contracts.md           RPC names, payloads, auth rules, errors, examples.
-docs/03-verification-plan.md       Unit and integration verification checklist.
-docs/04-agent-workflow.md          Agentic coding workflow and task sequencing.
-docs/05-milestones.md              Phase plan with Definition of Done per phase.
-docs/06-research-log.md            Required research log template.
-prompts/00-agentic-kickoff.md      First prompt for Codex/agentic coding.
-prompts/01-phase-0-research.md     Prompt for research/version baseline.
-prompts/02-phase-2-runtime.md      Prompt for Docker/Nakama/PostgreSQL skeleton.
-prompts/03-phase-3-metadata-rpc.md Prompt for authenticated metadata RPC.
-prompts/04-phase-4-config-rpc.md   Prompt for config RPC.
-prompts/05-phase-5-private-rpc.md  Prompt for private server-to-server RPC.
-prompts/06-final-polish.md         Prompt for final verification and reviewer polish.
-```
-
-## Core development principle
-
-This assignment should be built incrementally:
-
-1. Research and pin compatible versions.
-2. Create skeleton and docs.
-3. Make Docker + Nakama + PostgreSQL boot.
-4. Add one RPC at a time.
-5. Use tests for pure logic.
-6. Verify integration through Docker and curl.
-7. Keep the README practical for the reviewer.
-
-## Expected final verification
-
-Before submission, the final repository should pass:
+Unit tests:
 
 ```bash
 go test ./...
-docker compose up --build
 ```
 
-And the README should show how to verify:
+Pinned-toolchain fallback:
 
-- authenticated metadata update success;
-- metadata update failure without auth;
-- game config RPC success;
-- private RPC failure from a user session;
-- private RPC success through server-to-server/runtime key;
-- invalid JSON clean failure.
+```bash
+docker run --rm -v "$PWD":/backend -w /backend heroiclabs/nakama-pluginbuilder:3.37.0 test ./...
+```
 
-## Current status
+Metadata RPC:
 
-This starter is ready for agentic coding workflow setup. Implementation code should be added only after Phase 0 and Phase 1 are complete.
+```bash
+SESSION_TOKEN="$(./scripts/auth-device.sh)"
+SESSION_TOKEN="$SESSION_TOKEN" ./scripts/rpc-update-metadata.sh
+```
+
+Expected success:
+
+```json
+{"success":true,"metadata":{...}}
+```
+
+Negative metadata examples:
+
+```bash
+curl -i -X POST 'http://127.0.0.1:7350/v2/rpc/update_user_metadata?unwrap=true' \
+  -H 'Content-Type: application/json' \
+  --data '{"favoriteHero":"warrior"}'
+```
+
+Expected unauthenticated failure:
+
+```text
+HTTP 401
+Auth token or HTTP key required
+```
+
+```bash
+SESSION_TOKEN="$(./scripts/auth-device.sh)"
+curl -i -X POST 'http://127.0.0.1:7350/v2/rpc/update_user_metadata?unwrap=true' \
+  -H "Authorization: Bearer ${SESSION_TOKEN}" \
+  -H 'Content-Type: application/json' \
+  --data 'not-json'
+```
+
+Expected invalid JSON failure:
+
+```text
+HTTP 400
+metadata payload must be valid JSON
+```
+
+Game config RPC:
+
+```bash
+./scripts/rpc-get-game-config.sh
+```
+
+Expected success:
+
+```json
+{"welcomeMessage":"Welcome to the game!","xpRate":1.5,"rarityOptions":["common","rare","epic","legendary"]}
+```
+
+Private RPC:
+
+```bash
+./scripts/rpc-private-health.sh
+MODE=user SESSION_TOKEN="$(./scripts/auth-device.sh)" ./scripts/rpc-private-health.sh
+```
+
+Expected success:
+
+```json
+{"success":true}
+```
+
+Expected user-session failure:
+
+```text
+HTTP 403
+private_health_check is only callable via server-to-server/runtime HTTP key
+```
+
+## Reviewer Map
+
+- [`main.go`](main.go) registers all runtime RPCs.
+- [`metadata_rpc.go`](metadata_rpc.go) and [`metadata_rpc_test.go`](metadata_rpc_test.go) implement and test `update_user_metadata`.
+- [`config_rpc.go`](config_rpc.go) and [`config_rpc_test.go`](config_rpc_test.go) implement and test `get_game_config`.
+- [`private_rpc.go`](private_rpc.go) and [`private_rpc_test.go`](private_rpc_test.go) implement and test `private_health_check`.
+- [`Dockerfile`](Dockerfile), [`docker-compose.yml`](docker-compose.yml), and [`local.yml`](local.yml) boot Nakama + PostgreSQL.
+- [`scripts/`](scripts) contains the exact review commands.
+- [`docs/`](docs) contains the assignment brief, contracts, verification plan, milestones, and research log.
+
+## Notes
+
+The Docker build path is the source of truth for the Nakama Go plugin ABI. The host Go toolchain is only for local tooling and tests.
