@@ -102,11 +102,11 @@ Required negative flows:
 - call with invalid JSON must fail cleanly;
 - call with non-object JSON must fail if object-only contract is chosen.
 
-Placeholder commands:
+Verification commands:
 
 ```bash
-./scripts/auth-device.sh
-./scripts/rpc-update-metadata.sh
+SESSION_TOKEN="$(./scripts/auth-device.sh)"
+SESSION_TOKEN="$SESSION_TOKEN" ./scripts/rpc-update-metadata.sh
 ```
 
 ## Phase 4 verification - `get_game_config`

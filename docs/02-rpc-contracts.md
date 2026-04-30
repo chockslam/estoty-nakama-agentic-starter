@@ -66,16 +66,11 @@ Exact response may differ if Nakama conventions make another shape cleaner.
 - JSON payload is not an object.
 - Metadata update fails internally.
 
-### Placeholder curl flow
-
-To be finalized after implementation:
+### Local verification flow
 
 ```bash
-# 1. Authenticate user and capture token.
-./scripts/auth-device.sh
-
-# 2. Call RPC with Bearer token.
-./scripts/rpc-update-metadata.sh
+SESSION_TOKEN="$(./scripts/auth-device.sh)"
+SESSION_TOKEN="$SESSION_TOKEN" ./scripts/rpc-update-metadata.sh
 ```
 
 ## RPC 2: `get_game_config`

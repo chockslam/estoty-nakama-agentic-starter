@@ -41,6 +41,20 @@ Local-only values used by the default Docker Compose stack:
 - Nakama session encryption key: `defaultencryptionkey`
 - Nakama refresh encryption key: `defaultrefreshencryptionkey`
 
+## Phase 3 metadata RPC
+
+The runtime module now registers `update_user_metadata`.
+
+Local verification flow:
+
+```bash
+SESSION_TOKEN="$(./scripts/auth-device.sh)"
+SESSION_TOKEN="$SESSION_TOKEN" ./scripts/rpc-update-metadata.sh
+```
+
+`auth-device.sh` uses the local default server key and prints the session token to stdout.
+`rpc-update-metadata.sh` expects `SESSION_TOKEN` and sends raw JSON through the RPC `unwrap=true` path.
+
 ## Start the stack
 
 ```bash
@@ -54,7 +68,7 @@ The stack exposes the standard Nakama ports:
 - gRPC API: `localhost:7349`
 - Console gRPC: `localhost:7348`
 
-The runtime module currently only logs startup. RPCs are added in later phases.
+The runtime module currently logs startup and exposes the authenticated metadata update RPC. Remaining RPCs are added in later phases.
 
 ## How to use this starter
 
