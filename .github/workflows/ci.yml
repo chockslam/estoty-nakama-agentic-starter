@@ -21,5 +21,8 @@ jobs:
       - name: Run unit tests
         run: go test ./...
 
+      - name: Run unit tests on pinned plugin-builder toolchain
+        run: docker run --rm -v "$PWD":/backend -w /backend heroiclabs/nakama-pluginbuilder:3.37.0 test ./...
+
       - name: Build Docker stack
         run: docker compose build

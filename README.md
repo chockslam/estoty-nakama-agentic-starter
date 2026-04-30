@@ -75,7 +75,7 @@ Expected success:
 {"success":true,"metadata":{...}}
 ```
 
-Merge semantics: metadata updates use a deterministic shallow merge. Incoming top-level keys overwrite existing top-level keys, nested object deep-merge is out of scope, and the caller cannot choose the target user/account.
+Merge semantics: metadata updates use a deterministic shallow merge. Incoming top-level keys overwrite existing top-level keys, nested object deep-merge is out of scope, and the caller cannot choose the target user/account. Reserved identity keys (`userId`, `username`, `id`, `user_id`) are rejected with HTTP 400.
 
 Negative metadata examples:
 
@@ -105,6 +105,21 @@ Expected invalid JSON failure:
 ```text
 HTTP 400
 metadata payload must be valid JSON
+```
+
+```bash
+SESSION_TOKEN="$(./scripts/auth-device.sh)"
+curl -i -X POST 'http://127.0.0.1:7350/v2/rpc/update_user_metadata?unwrap=true' \
+  -H "Authorization: Bearer ${SESSION_TOKEN}" \
+  -H 'Content-Type: application/json' \
+  --data '{"userId":"user-999"}'
+```
+
+Expected reserved-key failure:
+
+```text
+HTTP 400
+metadata payload contains a reserved key
 ```
 
 Game config RPC:
