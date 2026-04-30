@@ -15,5 +15,8 @@ func InitModule(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runti
 	if err := initializer.RegisterRpc(getGameConfigRPCID, getGameConfigRPC); err != nil {
 		return err
 	}
+	if err := initializer.RegisterRpc(privateHealthCheckRPCID, privateHealthCheckRPC); err != nil {
+		return err
+	}
 	return nil
 }

@@ -79,6 +79,20 @@ Expected response shape:
 }
 ```
 
+## Phase 5 private RPC
+
+The runtime now also exposes `private_health_check`.
+
+Local verification flow:
+
+```bash
+./scripts/rpc-private-health.sh
+MODE=user SESSION_TOKEN="$(./scripts/auth-device.sh)" ./scripts/rpc-private-health.sh
+```
+
+The first command uses the local runtime HTTP key and should return `{"success":true}`.
+The second command uses a user session and should fail with an authorization error.
+
 ## Start the stack
 
 ```bash
@@ -92,7 +106,7 @@ The stack exposes the standard Nakama ports:
 - gRPC API: `localhost:7349`
 - Console gRPC: `localhost:7348`
 
-The runtime module currently logs startup and exposes the authenticated metadata update RPC plus the public game config RPC. Remaining RPCs are added in later phases.
+The runtime module currently logs startup and exposes all three assignment RPCs.
 
 ## How to use this starter
 

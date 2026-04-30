@@ -166,14 +166,11 @@ If using a non-empty response, document why.
 - Called without server-to-server/runtime key.
 - Missing or invalid runtime HTTP key.
 
-### Placeholder curl flow
-
-To be finalized after implementation:
+### Local verification flow
 
 ```bash
-# Positive path: call via runtime HTTP key / server-to-server path.
 ./scripts/rpc-private-health.sh
-# Negative path: call the same endpoint with a user bearer token.
+MODE=user SESSION_TOKEN="$(./scripts/auth-device.sh)" ./scripts/rpc-private-health.sh
 ```
 
 ## Naming stability

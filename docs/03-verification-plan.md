@@ -174,11 +174,11 @@ Required negative flow:
 2. Call private RPC using user session.
 3. Verify failure.
 
-Placeholder commands:
+Verification commands:
 
 ```bash
 ./scripts/rpc-private-health.sh
-# documented user-session curl example
+MODE=user SESSION_TOKEN="$(./scripts/auth-device.sh)" ./scripts/rpc-private-health.sh
 ```
 
 ## Final reviewer verification checklist
