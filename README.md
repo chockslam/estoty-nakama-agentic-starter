@@ -55,6 +55,30 @@ SESSION_TOKEN="$SESSION_TOKEN" ./scripts/rpc-update-metadata.sh
 `auth-device.sh` uses the local default server key and prints the session token to stdout.
 `rpc-update-metadata.sh` expects `SESSION_TOKEN` and sends raw JSON through the RPC `unwrap=true` path.
 
+## Phase 4 game config RPC
+
+The runtime now also exposes `get_game_config`.
+
+The game configuration is stored in [`config/game_config.json`](config/game_config.json) and copied into the Nakama image at runtime startup.
+
+Local verification flow:
+
+```bash
+./scripts/rpc-get-game-config.sh
+```
+
+The helper uses the local runtime HTTP key, not a player session token.
+
+Expected response shape:
+
+```json
+{
+  "welcomeMessage": "Welcome to the game!",
+  "xpRate": 1.5,
+  "rarityOptions": ["common", "rare", "epic", "legendary"]
+}
+```
+
 ## Start the stack
 
 ```bash
@@ -68,7 +92,7 @@ The stack exposes the standard Nakama ports:
 - gRPC API: `localhost:7349`
 - Console gRPC: `localhost:7348`
 
-The runtime module currently logs startup and exposes the authenticated metadata update RPC. Remaining RPCs are added in later phases.
+The runtime module currently logs startup and exposes the authenticated metadata update RPC plus the public game config RPC. Remaining RPCs are added in later phases.
 
 ## How to use this starter
 

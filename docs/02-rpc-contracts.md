@@ -77,13 +77,15 @@ SESSION_TOKEN="$SESSION_TOKEN" ./scripts/rpc-update-metadata.sh
 
 ### Purpose
 
-Return free-form game configuration JSON.
+Return free-form game configuration JSON loaded from `config/game_config.json`.
 
 ### Auth requirement
 
 No user session is required.
 
 This RPC is public because it returns non-sensitive game configuration.
+
+The HTTP helper for local verification uses Nakama's runtime HTTP key, since `RegisterRpc` requests still require either a session token or an HTTP key at the transport layer.
 
 ### Response body
 
@@ -110,9 +112,7 @@ Must include at least:
 - Missing required fields.
 - Invalid field types.
 
-### Placeholder curl flow
-
-To be finalized after implementation:
+### Local verification flow
 
 ```bash
 ./scripts/rpc-get-game-config.sh

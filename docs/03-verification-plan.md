@@ -139,7 +139,7 @@ Required flow:
    - `xpRate` number;
    - `rarityOptions` string list.
 
-Placeholder command:
+Verification command:
 
 ```bash
 ./scripts/rpc-get-game-config.sh

@@ -11,6 +11,10 @@ response_file="${TMPDIR:-/tmp}/nakama-auth-device.$$"
 trap 'rm -f "$response_file"' EXIT
 
 curl -sS "${NAKAMA_URL}/v2/account/authenticate/device?create=true&username=${USERNAME}" \
+	--fail \
+	--retry 10 \
+	--retry-connrefused \
+	--retry-delay 1 \
 	-u "${NAKAMA_SERVER_KEY}:" \
 	-H 'Content-Type: application/json' \
 	-H 'Accept: application/json' \

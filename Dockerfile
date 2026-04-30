@@ -14,4 +14,5 @@ RUN go build --trimpath --mod=vendor --buildmode=plugin -o ./backend.so
 FROM heroiclabs/nakama:3.37.0
 
 COPY --from=builder /backend/backend.so /nakama/data/modules/backend.so
+COPY config /nakama/data/config
 COPY local.yml /nakama/data/local.yml

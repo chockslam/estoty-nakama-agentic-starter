@@ -18,7 +18,7 @@ Implement get_game_config RPC.
 
 Before editing:
 - restate the RPC contract;
-- decide whether config is file-based or embedded, using docs/01-technical-design.md and baseline assumptions from docs/06-research-log.md;
+- confirm the file-based config source in `config/game_config.json` and baseline assumptions from docs/01-technical-design.md and docs/06-research-log.md;
 - list pure config validation functions;
 - list table-driven tests;
 - list integration verification steps.
@@ -34,6 +34,7 @@ Write unit tests for:
 
 Implementation requirements:
 - Register get_game_config in Nakama runtime.
+- Load and validate `config/game_config.json`.
 - Return JSON containing:
   - welcomeMessage: string;
   - xpRate: float/number;
@@ -46,7 +47,7 @@ Verification:
 Run:
 - go test ./...
 - docker compose up --build, if needed
-- get_game_config RPC call
+- get_game_config RPC call using the local runtime HTTP key
 - verify response field names and types
 
 Constraints:

@@ -141,7 +141,7 @@ Merge behavior is defined in `docs/02-rpc-contracts.md` as a shallow merge.
 
 Core logic:
 
-1. Load or embed config.
+1. Load config from `config/game_config.json`.
 2. Treat the RPC as public; no user session is required.
 3. Validate required fields.
 4. Return JSON.
@@ -153,7 +153,7 @@ loadGameConfig(path string) (GameConfig, error)
 validateGameConfig(cfg GameConfig) error
 ```
 
-Static config in `config/game_config.json` is preferred unless a simpler embedded typed config is chosen and justified.
+Static config in `config/game_config.json` is the chosen source of truth for this repository. The runtime should load and validate that file, then return the JSON contents.
 
 ### `private_health_check`
 
@@ -215,6 +215,4 @@ Do not attempt to fully mock Nakama internals unless it is simple and clearly us
 
 ## Remaining open decisions
 
-- Config source: JSON file vs embedded typed config.
 - Exact curl endpoints for the verification scripts.
-- Exact Go version printed by the selected Nakama image at startup, to be recorded after Phase 2 verification.
